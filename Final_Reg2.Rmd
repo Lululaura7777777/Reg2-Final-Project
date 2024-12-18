@@ -26,6 +26,11 @@ NMES1988<-NMES1988%>%mutate(
   )
 )
 ```
+```{r table1}
+library(table1)
+table1 <- table1::table1(visits ~ age + income + gender + employed + insurance + health + new.chronic, data = NMES1988)
+print(table1)
+```
 
 ```{r model1 and fit test}
 # since visit is a count of events, so we use a poisson model
