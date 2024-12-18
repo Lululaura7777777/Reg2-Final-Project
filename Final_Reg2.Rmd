@@ -1,0 +1,58 @@
+---
+title: "Reg 2 final project"
+author: "Angela Cheng"
+date: "2024-12-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r data cleaning}
+# load the data
+library("AER")
+data(NMES1988, package = "AER") 
+help(NMES1988, package = "AER")
+# 4406 obs and 19 variables
+
+# creating new chronic
+library(dplyr)
+NMES1988<-NMES1988%>%mutate(
+  new.chronic=case_when(
+    chronic==0~0,
+    chronic==1~1,
+    chronic>=2~2
+  )
+)
+# factor all categorical data
+factor(NMES1988$)
+```
+
+```{r model1 and fit test}
+# since visit is a count of events, so we use a poisson model
+# before using the poisson model, 
+# check the mean and variance of the visit to see if it meets the assumption
+mean(NMES1988$visits)
+var(NMES1988$visits)
+# mean=5.77 and variance=45.69 they are not close to each other
+# so we cannot use a poission model
+# use negative binomial regression instead
+library(MASS)
+model1 <- glm.nb(visits ~ age + income + gender + employed + insurance + health + new.chronic, 
+                       data=NMES1988)
+summary(model1)
+# likelihood ratio test
+null_model <- glm.nb(visits ~ 1, data = NMES1988)
+anova(null_model,model1,test="Chisq")
+# BIC
+BIC(model1)
+```
+
+```{r model1 and prediction}
+# Make predictions
+prediction1 <- predict(model1, newdata = NMES1988, type = "response")
+
+# Display predictions
+prediction1
+```
