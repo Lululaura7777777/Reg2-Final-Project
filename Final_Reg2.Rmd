@@ -43,6 +43,24 @@ ggplot(NMES1988, aes(x = visits)) +
   ) +
   theme_minimal()
 ```
+```{r table 2}
+library(dplyr)
+
+selected_data <- NMES1988 %>%
+  dplyr::mutate(
+    gender = as.numeric(gender) - 1,  
+    employed = as.numeric(employed) - 1, 
+    insurance = as.numeric(insurance) - 1, 
+    health = as.numeric(factor(health, ordered = TRUE)),  
+    new.chronic = as.numeric(factor(new.chronic, ordered = TRUE)) 
+  ) %>%
+  dplyr::select(visits, age, income, gender, employed, insurance, health, new.chronic)
+
+
+cor_matrix <- cor(selected_data, method = "spearman", use = "complete.obs")
+
+cor_matrix
+```
 
 ```{r model1 and fit test}
 # since visit is a count of events, so we use a poisson model
