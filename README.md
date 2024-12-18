@@ -12,5 +12,7 @@ This project analyzes the relationship between private insurance and healthcare 
 Authors
 
 Angela Cheng: Coding and preprocessing.
+
 Wenqian Zheng: Report writing and results interpretation.
+
 Yulu He: Formatting, visualizations, and synthesis.
