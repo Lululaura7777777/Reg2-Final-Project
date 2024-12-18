@@ -25,8 +25,6 @@ NMES1988<-NMES1988%>%mutate(
     chronic>=2~2
   )
 )
-# factor all categorical data
-factor(NMES1988$)
 ```
 
 ```{r model1 and fit test}
@@ -44,15 +42,76 @@ model1 <- glm.nb(visits ~ age + income + gender + employed + insurance + health 
 summary(model1)
 # likelihood ratio test
 null_model <- glm.nb(visits ~ 1, data = NMES1988)
-anova(null_model,model1,test="Chisq")
+lrtest(null_model,model1)
 # BIC
 BIC(model1)
 ```
 
 ```{r model1 and prediction}
-# Make predictions
-prediction1 <- predict(model1, newdata = NMES1988, type = "response")
+test.data.ins0 = data.frame(insurance = "no", age = mean(NMES1988$age), income = mean(NMES1988$income), gender = "female", employed = "no", health="poor", new.chronic=0)
+# predict outcomes (responses) using 'predict()'
+predicted.value.ins0<-predict(model1, test.data.ins0, type = "response")
+# show predicted value
+predicted.value.ins0
 
-# Display predictions
-prediction1
+test.data.ins1 = data.frame(insurance = "yes", age = mean(NMES1988$age), income = mean(NMES1988$income), gender = "female", employed = "no", health="poor", new.chronic=0)
+# predict outcomes (responses) using 'predict()'
+predicted.value.ins1<-predict(model1, test.data.ins1, type = "response")
+# show predicted value
+predicted.value.ins1
+```
+```{r model 2/3 fit}
+model2 <- glm.nb(visits ~ age + income + gender + employed + insurance + health + new.chronic + insurance:gender, 
+                 data=NMES1988)
+# lr test
+lrtest(model1,model2)
+
+model3 <- glm.nb(visits ~ age + income + gender + employed + insurance + health + new.chronic + insurance:health, 
+                 data=NMES1988)
+# lr test
+lrtest(model1,model3)
+
+# model 3 is preferred
+# model 3 prediction
+# health poor without insurance
+test.data.ins0healthp = data.frame(insurance = "no", age = mean(NMES1988$age), income = mean(NMES1988$income), gender = "female", employed = "no", health="poor", new.chronic=0)
+# predict outcomes (responses) using 'predict()'
+predicted.value.ins0healthp<-predict(model3, test.data.ins0healthp, type = "response")
+# show predicted value
+predicted.value.ins0healthp
+
+# health avarage without insurance
+test.data.ins0healtha = data.frame(insurance = "no", age = mean(NMES1988$age), income = mean(NMES1988$income), gender = "female", employed = "no", health="average", new.chronic=0)
+# predict outcomes (responses) using 'predict()'
+predicted.value.ins0healtha<-predict(model3, test.data.ins0healtha, type = "response")
+# show predicted value
+predicted.value.ins0healtha
+
+# health excellent without insurance
+test.data.ins0healthe = data.frame(insurance = "no", age = mean(NMES1988$age), income = mean(NMES1988$income), gender = "female", employed = "no", health="excellent", new.chronic=0)
+# predict outcomes (responses) using 'predict()'
+predicted.value.ins0healthe<-predict(model3, test.data.ins0healthe, type = "response")
+# show predicted value
+predicted.value.ins0healthe
+
+# health poor with insurance
+test.data.ins1healthp = data.frame(insurance = "yes", age = mean(NMES1988$age), income = mean(NMES1988$income), gender = "female", employed = "no", health="poor", new.chronic=0)
+# predict outcomes (responses) using 'predict()'
+predicted.value.ins1healthp<-predict(model3, test.data.ins1healthp, type = "response")
+# show predicted value
+predicted.value.ins1healthp
+
+# health avarage without insurance
+test.data.ins1healtha = data.frame(insurance = "yes", age = mean(NMES1988$age), income = mean(NMES1988$income), gender = "female", employed = "no", health="average", new.chronic=0)
+# predict outcomes (responses) using 'predict()'
+predicted.value.ins1healtha<-predict(model3, test.data.ins1healtha, type = "response")
+# show predicted value
+predicted.value.ins1healtha
+
+# health excellent without insurance
+test.data.ins1healthe = data.frame(insurance = "yes", age = mean(NMES1988$age), income = mean(NMES1988$income), gender = "female", employed = "no", health="excellent", new.chronic=0)
+# predict outcomes (responses) using 'predict()'
+predicted.value.ins1healthe<-predict(model3, test.data.ins1healthe, type = "response")
+# show predicted value
+predicted.value.ins1healthe
 ```
