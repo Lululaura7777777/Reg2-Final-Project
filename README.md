@@ -3,6 +3,7 @@
 Categorical Data Analysis Final Project
 
 Course: GPH GU 2354: Categorical Data Analysis (Fall 2024)
+
 Title: The Impact of Private Insurance on Healthcare Utilization: An Analysis of Physician Office Visits Using NMES1988 Data
 
 Overview
